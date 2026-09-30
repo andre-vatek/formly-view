@@ -310,6 +310,47 @@ button {
   background: var(--acc);
   border-color: var(--acc);
 }
+.hi {
+  cursor: pointer;
+}
+.hi .hl {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* undone entries (can be redone) */
+.hi.fut {
+  color: var(--dim);
+  font-style: italic;
+}
+.layer .act {
+  font-size: 11px;
+  color: var(--dim);
+  padding: 0 2px;
+}
+.layer .act:hover {
+  color: var(--text);
+}
+.hist .lbl {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.hist .ur {
+  display: flex;
+  gap: 4px;
+}
+.hist .ur button {
+  padding: 2px 6px;
+  font-size: 12px;
+  color: var(--mute);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+}
+.hist .ur button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
 .box {
   margin: 12px 0 8px;
   padding: 14px;
@@ -759,4 +800,29 @@ input[type="range"] {
 }
 .swc {
   cursor: pointer;
+}
+
+.field input,
+.cell {
+  background: none;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  min-width: 0;
+  width: 100%;
+  outline: 0;
+}
+.cell {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  padding: 4px 6px;
+  width: 88%;
+}
+tr.act td {
+  background: rgba(124, 92, 255, 0.16);
+}
+.btn:disabled {
+  opacity: 0.4;
+  cursor: default;
 }
