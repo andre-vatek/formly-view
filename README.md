@@ -5,8 +5,8 @@
 Install Node.js and npm, then clone the repository and install its dependencies:
 
 ```sh
-git clone https://github.com/andre-vatek/formly-view.git
-cd formly-view
+git clone https://github.com/VATEK-INTERNAL/demo-formly.git
+cd demo-formly
 npm ci
 ```
 
