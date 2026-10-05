@@ -54,7 +54,10 @@ export default function App() {
   const meta = SCREENS[screen];
   useShortcuts(screen, editor);
   // A vertex move that wasn't applied doesn't survive leaving the screen.
-  useEffect(() => editor.cb.ui({ move: [0, 0, 0] }), [screen]);
+  useEffect(() => {
+    editor.cb.ui({ move: [0, 0, 0] });
+    editor.cb.gesture(false); // never carry an open gesture across screens
+  }, [screen]);
 
   return (
     <div className="app">

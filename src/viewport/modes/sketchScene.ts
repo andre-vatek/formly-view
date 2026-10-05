@@ -128,6 +128,7 @@ export function setupSketchScene(ctx: SceneContext): ModeHandle {
   let di = -1; // index of the point being dragged
   dom.onpointerdown = (e) => {
     if (e.button !== 0) return;
+    cb().gesture(true); // press → release is one undo step
     const w = world(e),
       { pts, active } = current(),
       // 12px hit radius converted to world units
@@ -158,8 +159,10 @@ export function setupSketchScene(ctx: SceneContext): ModeHandle {
         di,
       );
   };
-  dom.onpointerup = () => {
+  dom.onpointerup = dom.onpointercancel = () => {
+    if (di < 0) return;
     di = -1;
+    cb().gesture(false);
   };
 
   return { update };

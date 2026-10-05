@@ -21,14 +21,15 @@ type HistEntry = { doc: Doc; label: string };
 type Store = {
   states: HistEntry[];
   index: number;
-  /** Coalescing: repeated commits with the same key within COALESCE_MS
-   *  (e.g. one gizmo drag or slider drag) become a single history entry. */
+  /** True between gesture(true) and gesture(false): one drag, or one field
+   *  being edited. Commits with the same key inside a gesture are merged
+   *  into a single history entry; everything else is its own entry. */
+  gesture: boolean;
+  /** Key of the last commit made in the current gesture */
   key: string | null;
-  t: number;
   ui: UiState;
 };
 
-const COALESCE_MS = 800;
 const LOCK_VERB = { pos: "move", rot: "rotate", scl: "scale" } as const;
 const MAX_HISTORY = 100;
 
@@ -46,8 +47,8 @@ const INITIAL_UI: UiState = {
 const INITIAL_STORE: Store = {
   states: [{ doc: { objects: INITIAL_OBJECTS }, label: "Open " + DOC_TITLE }],
   index: 0,
+  gesture: false,
   key: null,
-  t: 0,
   ui: INITIAL_UI,
 };
 
@@ -80,7 +81,8 @@ const patchObject = (
   return { objects: doc.objects.map((x) => (x.id === id ? next : x)) };
 };
 
-/** Push (or coalesce) a new document state onto the history. */
+/** Push a new document state onto the history (or, within one gesture,
+ *  replace the entry that gesture already created). */
 const pushHistory = (
   s: Store,
   doc: Doc,
@@ -88,10 +90,9 @@ const pushHistory = (
   key: string | null,
   ui?: Partial<UiState>,
 ): Store => {
-  const now = Date.now();
   const states = s.states.slice(0, s.index + 1);
   const entry = { doc, label };
-  if (key !== null && s.key === key && now - s.t < COALESCE_MS && states.length > 1)
+  if (s.gesture && key !== null && s.key === key && states.length > 1)
     states[states.length - 1] = entry;
   else states.push(entry);
   if (states.length > MAX_HISTORY) states.shift();
@@ -100,7 +101,6 @@ const pushHistory = (
     states,
     index: states.length - 1,
     key,
-    t: now,
     ui: ui ? { ...s.ui, ...ui } : s.ui,
   };
 };
@@ -218,6 +218,8 @@ export function useEditorState() {
           const target = sketchTarget(doc.objects, s.ui.selected);
           if (!target) return { ...s, ui: { ...s.ui, draft: pts, active } };
           if (pts.length < 3) return s; // an extrusion needs a closed outline
+          // Just selecting a point changes nothing in the document
+          if (pts === target.geo.pts) return { ...s, ui: { ...s.ui, active } };
           const next = patchObject(doc, target.id, (o) => ({
             ...o,
             geo: { ...target.geo, pts },
@@ -363,6 +365,12 @@ export function useEditorState() {
         setStats((o) => ({ ...o, verts: { v, affected, total } })),
       fps: (fps) => setStats((o) => (o.fps === fps ? o : { ...o, fps })),
 
+      gesture: (active) =>
+        setS((s) =>
+          s.gesture === active && s.key === null
+            ? s
+            : { ...s, gesture: active, key: null },
+        ),
       undo: () => goTo((s) => s.index - 1),
       redo: () => goTo((s) => s.index + 1),
       jump: (i) => goTo(() => i),

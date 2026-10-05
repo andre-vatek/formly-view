@@ -102,6 +102,9 @@ export default function SketchInspector({ doc, ui, selectedObj, cb, go }: Props)
                     step={10}
                     value={t.x}
                     onChange={(e) => setPt(i, { x: +e.target.value })}
+                    onFocus={() => cb.gesture(true)}
+                    onBlur={() => cb.gesture(false)}
+                    onKeyDown={(e) => e.key === "Enter" && cb.gesture(true)}
                   />
                 </td>
                 <td>
@@ -111,6 +114,9 @@ export default function SketchInspector({ doc, ui, selectedObj, cb, go }: Props)
                     step={10}
                     value={t.y}
                     onChange={(e) => setPt(i, { y: +e.target.value })}
+                    onFocus={() => cb.gesture(true)}
+                    onBlur={() => cb.gesture(false)}
+                    onKeyDown={(e) => e.key === "Enter" && cb.gesture(true)}
                   />
                 </td>
                 <td

@@ -108,6 +108,9 @@ export type Cb = {
   ui: (patch: Partial<UiState>) => void;
   verts: (v: Vtx[], affected: number, total: number) => void;
   fps: (fps: number) => void;
+  /** Mark the start (true) / end (false) of one user gesture — a drag, or
+   *  editing one field. Changes inside a gesture form a single undo step. */
+  gesture: (active: boolean) => void;
   undo: () => void;
   redo: () => void;
   jump: (index: number) => void;

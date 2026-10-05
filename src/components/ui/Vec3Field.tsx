@@ -8,6 +8,7 @@ type Props = {
   decimals?: number;
   step?: number;
   disabled?: boolean;
+  onGesture?: (active: boolean) => void;
 };
 
 /** Three NumberFields (X, Y, Z) editing one vector. */
@@ -18,6 +19,7 @@ export default function Vec3Field({
   decimals = 1,
   step = 1,
   disabled,
+  onGesture,
 }: Props) {
   return (
     <>
@@ -35,6 +37,7 @@ export default function Vec3Field({
             decimals={decimals}
             step={step}
             disabled={disabled}
+            onGesture={onGesture}
             onChange={(n) =>
               onChange(value.map((c, j) => (j === i ? n : c)) as XYZ)
             }

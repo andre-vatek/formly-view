@@ -79,6 +79,7 @@ export default function Viewport({ mode, view, cb }: Props) {
         t.addEventListener("dragging-changed", (e) => {
           drag = !!e.value;
           oc.enabled = !drag;
+          cbr.current.gesture(drag); // one drag = one undo step
         });
         t.addEventListener("objectChange", () =>
           onChange(t.object as THREE.Object3D),

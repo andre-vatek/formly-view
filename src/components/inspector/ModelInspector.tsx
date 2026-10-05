@@ -49,6 +49,7 @@ export default function ModelInspector({ selectedObj: o, cb, go }: Props) {
           value={xf.pos}
           decimals={2}
           disabled={locked}
+          onGesture={cb.gesture}
           onChange={(pos) => cb.xf(o.id, { ...xf, pos })}
         />
         {!locked && (
@@ -61,6 +62,7 @@ export default function ModelInspector({ selectedObj: o, cb, go }: Props) {
           label="Rotation"
           value={xf.rot}
           disabled={locked}
+          onGesture={cb.gesture}
           onChange={(rot) => cb.xf(o.id, { ...xf, rot })}
         />
         {!locked && (
@@ -75,6 +77,7 @@ export default function ModelInspector({ selectedObj: o, cb, go }: Props) {
           decimals={2}
           step={0.1}
           disabled={locked}
+          onGesture={cb.gesture}
           onChange={(scl) => cb.xf(o.id, { ...xf, scl })}
         />
         {!locked && (
@@ -94,6 +97,7 @@ export default function ModelInspector({ selectedObj: o, cb, go }: Props) {
             min={5}
             max={80}
             unit=" mm"
+            onGesture={cb.gesture}
             onChange={(depth) => cb.setExtrude(o.id, { depth })}
           />
           <Slider
@@ -103,6 +107,7 @@ export default function ModelInspector({ selectedObj: o, cb, go }: Props) {
             max={8}
             step={0.5}
             unit=" mm"
+            onGesture={cb.gesture}
             onChange={(bevel) => cb.setExtrude(o.id, { bevel })}
           />
           <Slider
@@ -110,6 +115,7 @@ export default function ModelInspector({ selectedObj: o, cb, go }: Props) {
             value={geo.seg}
             min={4}
             max={32}
+            onGesture={cb.gesture}
             onChange={(seg) => cb.setExtrude(o.id, { seg })}
           />
           {o.edits && (
